@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
 <link rel="stylesheet" href="styles.css">
-<link rel="preload" as="image" href="img/hero.jpg">
+<link rel="preload" as="image" href="img/hero-poster.jpg">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -105,7 +105,7 @@
 
 <main id="main">
   <section class="hero" aria-labelledby="hero-title">
-    <img class="hero__bg" src="img/hero.jpg" width="1920" height="1440" alt="" fetchpriority="high">
+    <video class="hero__bg" muted loop playsinline preload="auto" poster="img/hero-poster.jpg" width="1280" height="720" aria-hidden="true" data-hero-video><source src="img/hero.mp4" type="video/mp4"></video>
     <div class="container hero__wrap">
       <div class="hero__text">
         <p class="eyebrow">Геодезические и железнодорожные услуги</p>
@@ -440,6 +440,12 @@
 </template>
 
 <script>
+// Видео в hero: не запускаем при «уменьшить движение», вместо него остаётся постер
+const heroVideo = document.querySelector('[data-hero-video]');
+if (heroVideo && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  heroVideo.play().catch(() => {});
+}
+
 // Тема: тёмная по умолчанию, выбор сохраняется
 const themeBtn = document.querySelector('.theme-btn');
 const applyTheme = (t) => {

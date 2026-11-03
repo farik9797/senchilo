@@ -111,7 +111,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 
 /* hero */
 .hero { position: relative; isolation: isolate; min-height: 760px; padding-top: 150px; padding-bottom: 130px; }
-.hero__bg { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: 50% 62%; }
+.hero__bg { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
 .hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background:
   radial-gradient(60% 55% at 78% 30%, rgba(255, 138, 28, 0.22), transparent 70%),
   linear-gradient(90deg, rgba(var(--ov), 0.97) 0%, rgba(var(--ov), 0.86) 34%, rgba(var(--ov), 0.25) 62%, rgba(var(--ov), 0.45) 100%),
