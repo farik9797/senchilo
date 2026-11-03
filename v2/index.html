@@ -97,7 +97,7 @@
       <span><b>+375 29 706-14-25</b><small>Пн–Сб 09:00–18:00</small></span>
     </a>
     <button class="theme-btn" type="button" aria-label="Включить светлую тему"><svg class="icon" aria-hidden="true"><use href="#i-sun"/></svg></button>
-    <a class="btn btn--primary btn--sm" href="#zayavka">Оставить заявку <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+    <a class="btn btn--primary btn--sm" href="#zayavka" data-svc="zayavka">Оставить заявку <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
     <button class="burger" type="button" aria-label="Открыть меню" aria-expanded="false" aria-controls="menu"><svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg></button>
   </div>
 </header>
@@ -276,7 +276,7 @@
       <div>
         <h2 id="cta-title">Готовы обсудить ваш проект?</h2>
         <p class="lead-sm">Оставьте заявку — и мы подготовим индивидуальное предложение</p>
-        <a class="btn btn--primary" href="#zayavka">Оставить заявку <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
+        <a class="btn btn--primary" href="#zayavka" data-svc="zayavka">Оставить заявку <svg class="icon" aria-hidden="true"><use href="#i-arrow-right"/></svg></a>
       </div>
       <ul class="contacts">
         <li><svg class="icon" aria-hidden="true"><use href="#i-phone"/></svg><a href="tel:+375297061425"><b>+375 29 706-14-25</b><small>Телефон/факс: <span style="white-space:nowrap">+375 17 301-11-29</span></small></a></li>
@@ -313,16 +313,6 @@
       <p>© 2026 SENCHILO (ИП Сенчило В. С., УНП 191504299). Все права защищены.</p>
       <nav aria-label="Документы"><a href="#" data-todo="страница политики">Политика конфиденциальности</a><a href="#" data-todo="карта сайта">Карта сайта</a></nav>
     </div>
-    <p class="credits">Фото объектов: архив ИП Сенчило. Иллюстративные фото, Wikimedia Commons:
-      <a href="https://commons.wikimedia.org/wiki/File:Trimble_Total_Station_DR_200_01_(fcm).jpg">Frank C. Müller</a> (CC BY-SA 4.0),
-      <a href="https://commons.wikimedia.org/wiki/File:Railway_tracks_at_sunset.jpg">W. Carter</a> (CC0),
-      <a href="https://commons.wikimedia.org/wiki/File:Plan_d%27une_pompe_et_conduite_d%27adduction_d%27eau.jpg">Gagey &amp; Seguin</a> (общественное достояние),
-      <a href="https://commons.wikimedia.org/wiki/File:M25-M23_motorway_interchange,_Surrey,_England.jpg">Mike McBey</a> (CC BY 2.0),
-      <a href="https://commons.wikimedia.org/wiki/File:Highway_Calumpit_railway_station_construction_sites_03.jpg">FBenjr123</a> (CC BY-SA 4.0),
-      <a href="https://commons.wikimedia.org/wiki/File:Railway_Sunset_(18785617944).jpg">Timo Newton-Syms</a> (CC BY-SA 2.0),
-      <a href="https://commons.wikimedia.org/wiki/File:Railway_tracks_at_night.jpg">Olga Dudenko</a> (CC BY-SA 2.0),
-      <a href="https://commons.wikimedia.org/wiki/File:2026_Berlin_Bahnhof_Sch%C3%B6neweide_Gleisvorfeld_03.jpg">NutzerAusBerlin</a> (CC0),
-      <a href="https://commons.wikimedia.org/wiki/File:%C5%BDelezni%C4%8Dn%C3%AD_tra%C5%A5_280_p%C5%99i_z%C3%A1padu_slunce_(07).jpg">Radim Holiš</a> (CC BY-SA 3.0 CZ).</p>
   </div>
 </footer>
 
@@ -346,6 +336,18 @@
   </div>
 </dialog>
 
+<template id="tpl-zayavka">
+  <div class="modal__img"><img src="img/bg-cta.jpg" width="1920" height="1080" alt=""></div>
+  <svg class="icon" aria-hidden="true"><use href="#i-file-check"/></svg>
+  <h2 id="modal-title">Оставить заявку</h2>
+  <p class="modal__lead">Расскажите об объекте и задаче: мы перезвоним, уточним детали и рассчитаем стоимость.</p>
+  <ul class="price">
+    <li><span>Телефон</span><b><a href="tel:+375297061425">+375 29 706-14-25</a></b></li>
+    <li><span>Телефон/факс</span><b><a href="tel:+375173011129">+375 17 301-11-29</a></b></li>
+    <li><span>E-mail</span><b><a href="mailto:kreazzot@mail.ru">kreazzot@mail.ru</a></b></li>
+    <li><span>Часы работы</span><b>Пн–Сб 09:00–18:00</b></li>
+  </ul>
+</template>
 <template id="tpl-geo">
   <div class="modal__img"><img src="img/svc-geo.jpg" width="960" height="1154" alt=""></div>
   <svg class="icon" aria-hidden="true"><use href="#i-drafting-compass"/></svg>
@@ -431,9 +433,13 @@ document.querySelectorAll('[data-svc]').forEach((a) => a.addEventListener('click
   if (!tpl || !modal.showModal) return;
   e.preventDefault();
   slot.replaceChildren(tpl.content.cloneNode(true));
-  const name = slot.querySelector('h2').textContent;
+  const general = a.dataset.svc === 'zayavka';
+  const name = general ? '' : slot.querySelector('h2').textContent;
   mform.service.value = name;
   mform.querySelector('[data-svc-name]').textContent = name;
+  mform.querySelector('.modal__svc').hidden = general;
+  modal.classList.toggle('is-general', general);
+  mform.querySelector('h3').textContent = general ? 'Ваши контакты' : 'Заявка на услугу';
   mform.querySelector('[aria-live]').textContent = '';
   modal.querySelector('.modal__box').scrollTop = 0;
   modal.showModal();

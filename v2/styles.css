@@ -257,8 +257,6 @@ ul { margin: 0; padding: 0; list-style: none; }
 .footer__bottom nav { display: flex; gap: 16px; }
 .footer__bottom nav a + a { padding-left: 16px; border-left: 1px solid var(--line-2); }
 .footer__bottom a:hover { color: var(--accent-2); }
-.credits { margin-top: 18px; color: var(--muted); font-size: 12px; line-height: 1.6; }
-.credits a { text-decoration: underline; text-decoration-color: rgba(var(--ink), 0.25); }
 
 /* переключатель темы */
 .theme-btn { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid var(--line-2); border-radius: 50%; background: rgba(var(--ov), 0.5); color: var(--accent); cursor: pointer; transition: background-color 0.2s, border-color 0.2s, color 0.2s; }
@@ -293,6 +291,7 @@ html:has(.modal[open]) { overflow: hidden; }
 .price { margin-top: 24px; border-top: 1px solid var(--line); }
 .price li { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 15px; line-height: 1.45; }
 .price b { flex: none; color: var(--accent); font-weight: 600; white-space: nowrap; }
+.price a:hover { color: var(--accent-2); text-decoration: underline; }
 .modal__note { margin-top: 16px; color: var(--muted); font-size: 13px; line-height: 1.5; }
 .modal__form { display: grid; align-content: start; gap: 14px; padding: 76px 36px 36px; border-left: 1px solid var(--line); background: var(--bg); }
 .modal__form h3 { font-size: 24px; font-weight: 600; line-height: 1.25; }
@@ -375,6 +374,9 @@ html:has(.modal[open]) { overflow: hidden; }
   .modal__info h2 { font-size: 24px; }
   .price li { flex-direction: column; gap: 2px; }
   .modal__form { padding: 28px 22px; border-left: 0; border-top: 1px solid var(--line); }
+  .modal.is-general .modal__form { order: -1; padding-top: 70px; border-top: 0; border-bottom: 1px solid var(--line); }
+  .modal.is-general .modal__img { display: none; }
+  .modal.is-general .modal__info { padding-top: 28px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
