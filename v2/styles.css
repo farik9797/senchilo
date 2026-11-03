@@ -386,6 +386,17 @@ html:has(.modal[open]) { overflow: hidden; }
   .modal.is-general .modal__img { display: none; }
   .modal.is-general .modal__info { padding-top: 28px; }
 }
+/* motion: Lenis + GSAP (index.html). Пока скрипт не стартовал, первый экран скрыт; без JS класса .anim нет */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+.anim .header__in > *, .anim .hero__text > *, .anim .hero .exp { opacity: 0; }
+.hero { overflow: clip; }
+.rv { transition: none !important; }
+.card__img img, .track img { transition: transform 0.7s var(--ease); }
+.card:hover .card__img img, .track figure:hover img { transform: scale(1.06); }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: 0.01ms !important; }

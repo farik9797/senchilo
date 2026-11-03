@@ -9,7 +9,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+<script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}
+if(!matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.classList.add("anim");setTimeout(function(){if(!window.gsap)document.documentElement.classList.remove("anim")},2500)}</script>
 <link rel="stylesheet" href="styles.css">
 <link rel="preload" as="image" href="img/hero-poster.jpg">
 <script type="application/ld+json">
@@ -234,7 +235,7 @@
       </div>
       <div class="slider" data-slider>
         <button class="arrow arrow--prev" type="button" aria-label="Предыдущие фото" data-prev><svg class="icon" aria-hidden="true"><use href="#i-arrow-right" transform="rotate(180 12 12)"/></svg></button>
-        <div class="track" tabindex="0" aria-label="Фото с объектов">
+        <div class="track" data-lenis-prevent-wheel tabindex="0" aria-label="Фото с объектов">
           <figure><img src="img/168840636.jpg" width="640" height="360" alt="Подъездной путь с бетонным переездом" loading="lazy"></figure>
           <figure><img src="img/168840637.jpg" width="640" height="360" alt="Укладка нового участка подъездного пути" loading="lazy"></figure>
           <figure><img src="img/168840639.jpg" width="640" height="360" alt="Подъездной путь вдоль ограждения предприятия" loading="lazy"></figure>
@@ -255,7 +256,7 @@
         <p class="eyebrow">Отзывы клиентов</p>
         <h2 class="h2" id="otzyvy-title">Нам доверяют</h2>
       </div>
-      <div class="quotes" tabindex="0" aria-label="Отзывы клиентов" data-reviews>
+      <div class="quotes" data-lenis-prevent-wheel tabindex="0" aria-label="Отзывы клиентов" data-reviews>
         <figure class="quote" aria-label="Отзыв 1 из 4">
           <span class="avatar"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg></span>
           <div>
@@ -346,7 +347,7 @@
 </footer>
 
 <!-- Попап услуги: содержимое берётся из шаблонов tpl-*, форма общая -->
-<dialog class="modal" id="svc-modal" aria-labelledby="modal-title">
+<dialog data-lenis-prevent class="modal" id="svc-modal" aria-labelledby="modal-title">
   <button class="modal__close" type="button" aria-label="Закрыть" data-close><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
   <div class="modal__box">
     <div class="modal__info" data-slot></div>
@@ -544,6 +545,82 @@ document.querySelectorAll('form[data-endpoint]').forEach((form) => {
       .catch(() => { help.textContent = 'Не получилось отправить. Позвоните нам.'; });
   });
 });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+// Плавность и анимации: Lenis (колесо мыши) + GSAP ScrollTrigger. Без JS или при «уменьшить движение» всё видно сразу.
+(() => {
+  const root = document.documentElement;
+  if (!root.classList.contains('anim') || !window.gsap || !window.ScrollTrigger) { root.classList.remove('anim'); return; }
+  gsap.registerPlugin(ScrollTrigger);
+  const ease = 'power3.out';
+
+  // Плавный скролл колесом; тач остаётся нативным
+  let lenis = null;
+  if (window.Lenis) {
+    lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 0.9 });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((t) => lenis.raf(t * 1000));
+    gsap.ticker.lagSmoothing(0);
+    // Якоря — через Lenis, с отступом под шапку
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest('a[href^="#"]');
+      if (!a || e.defaultPrevented) return;
+      const id = a.getAttribute('href');
+      const el = id === '#top' ? document.body : id.length > 1 && document.querySelector(id);
+      if (!el) return;
+      e.preventDefault();
+      lenis.scrollTo(id === '#top' ? 0 : el.getBoundingClientRect().top + scrollY - 80, { duration: 1.2 });
+      history.replaceState(null, '', id);
+    });
+    // Пока открыт попап, страница не прокручивается
+    const modal = document.getElementById('svc-modal');
+    new MutationObserver(() => (modal.open ? lenis.stop() : lenis.start())).observe(modal, { attributes: true, attributeFilter: ['open'] });
+  }
+
+  // Hero: появление при загрузке
+  const heroItems = gsap.utils.toArray('.hero__text > *');
+  gsap.timeline({ defaults: { ease, duration: 1 } })
+    .fromTo('.header__in > *', { opacity: 0, y: -16 }, { opacity: 1, y: 0, stagger: 0.06, duration: 0.8, clearProps: 'transform' })
+    .fromTo('.hero__bg', { scale: 1.12 }, { scale: 1, duration: 2.4, ease: 'power2.out' }, 0)
+    .fromTo(heroItems, { opacity: 0, y: 40 }, { opacity: 1, y: 0, stagger: 0.12, clearProps: 'transform' }, 0.15)
+    .fromTo('.marks li', { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: 0.08, duration: 0.7, clearProps: 'transform' }, '-=0.6')
+    .fromTo('.hero .exp', { opacity: 0, x: 40 }, { opacity: 1, x: 0, clearProps: 'transform' }, 0.6);
+
+  // Hero: видео и текст уезжают медленнее страницы
+  gsap.to('.hero__bg', { yPercent: 14, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+  gsap.to('.hero__wrap', { y: 90, opacity: 0.25, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+
+  // Фоновые фото секций: параллакс
+  document.querySelectorAll('.why__bg, .reviews__bg, .cta__bg').forEach((img) => {
+    gsap.fromTo(img, { yPercent: -7, scale: 1.18 }, { yPercent: 7, scale: 1.18, ease: 'none',
+      scrollTrigger: { trigger: img.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } });
+  });
+
+  // Появление блоков при прокрутке (только opacity/transform, фокус с клавиатуры не теряется)
+  const reveal = gsap.utils.toArray([
+    '.services__head > div > *', '.services__head > p', '.services__head > .more', '.card',
+    '.why__grid > div:first-child > *', '.feats li', '.quick',
+    '.projects .row-head > div > *', '.projects .row-head > .more', '.track figure',
+    '.reviews__grid > div:first-child > *', '.quotes', '.reviews__side',
+    '.cta__grid > div > *', '.contacts li',
+    '.footer__top > *', '.footer__bottom'
+  ].join(','));
+  // .rv отключает CSS-переходы на время появления, иначе они спорят с GSAP за transform
+  reveal.forEach((el) => el.classList.add('rv'));
+  gsap.set(reveal, { opacity: 0, y: 40 });
+  ScrollTrigger.batch(reveal, {
+    start: 'clamp(top 90%)', once: true, interval: 0.1,
+    onEnter: (els) => gsap.to(els, { opacity: 1, y: 0, duration: 0.9, ease, stagger: 0.08, overwrite: true, clearProps: 'transform',
+      onComplete: () => els.forEach((el) => el.classList.remove('rv')) })
+  });
+
+  // Пересчёт после загрузки картинок и шрифтов
+  addEventListener('load', () => ScrollTrigger.refresh());
+  document.fonts && document.fonts.ready.then(() => ScrollTrigger.refresh());
+})();
 </script>
 </body>
 </html>
