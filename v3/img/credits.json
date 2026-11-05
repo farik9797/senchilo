@@ -1,0 +1,44 @@
+[
+ {
+  "file": "hero",
+  "source": "видео заказчика: фрагмент 6,2–9,9 с (вид в окуляр, без надписей), склеен вперёд-назад"
+ },
+ {
+  "file": "svc-geo",
+  "source": "предоставлено заказчиком (коллаж «Наши услуги», 03.11.2026); надписи на куртке затёрты"
+ },
+ {
+  "file": "svc-pasport",
+  "source": "предоставлено заказчиком (коллаж «Наши услуги», 03.11.2026)"
+ },
+ {
+  "file": "svc-instr",
+  "source": "предоставлено заказчиком (коллаж «Наши услуги», 03.11.2026)"
+ },
+ {
+  "file": "svc-model",
+  "source": "предоставлено заказчиком (коллаж «Наши услуги», 03.11.2026)"
+ },
+ {
+  "file": "svc-sogl",
+  "source": "предоставлено заказчиком (коллаж «Наши услуги», 03.11.2026)"
+ },
+ {
+  "file": "bg-why",
+  "artist": "Timo Newton-Syms from Helsinki, Finland",
+  "lic": "CC BY-SA 2.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Railway_Sunset_(18785617944).jpg"
+ },
+ {
+  "file": "bg-reviews",
+  "artist": "Olga Dudenko",
+  "lic": "CC BY-SA 2.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Railway_tracks_at_night.jpg"
+ },
+ {
+  "file": "bg-cta",
+  "artist": "Nihali Barman",
+  "lic": "CC BY 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Crescent_Moon_over_Railway_Tracks_at_Sunset.jpg"
+ }
+]
